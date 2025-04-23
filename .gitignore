@@ -1,0 +1,12 @@
+# Thư mục node_modules
+node_modules/
+
+# Tệp cấu hình môi trường
+.env
+
+# Tệp log
+*.log
+
+# Tệp cấu hình của IDE
+.vscode/
+.idea/
