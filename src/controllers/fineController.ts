@@ -1,39 +1,30 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from 'express';
 
-import Fine, { IFine } from "../models/Fine";
-import User from "../models/User";
+import Fine from '../models/fine.model';
+import User from '../models/user.model';
 
-import AppError from "../error-handlers/AppError";
-import { PaginatedBody } from "../types/response";
-import { FineQuery, PayFineRequest } from "../types/request";
+import AppError from '../error-handlers/AppError';
+import { FineQuery } from '../interfaces/query';
+import { PayFineRequestBody } from '../interfaces/request-body';
 
 class FineController {
   // lấy danh sách khoản phạt có phân trang
-  async getFines(
-    req: Request<any, any, any, FineQuery>,
-    res: Response<PaginatedBody<IFine>>,
-    next: NextFunction
-  ): Promise<void> {
+  async getFines(req: Request<any, any, any, FineQuery>, res: Response, next: NextFunction): Promise<void> {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const pageSize = parseInt(req.query.pageSize as string) || 10;
-      const search = (req.query.search as string)?.trim() || "";
-
+      const search = (req.query.search as string)?.trim() || '';
       const paidQuery = req.query.paid;
 
       let paidFilter: boolean | undefined;
-      
-      if (paidQuery === "false") paidFilter = false;
-      else if (paidQuery === "true") paidFilter = true;
-      else paidFilter = undefined;
 
-      //  tìm kiếm khoản phạt theo tên user
-      let searchFilter: any = {};
+      if (paidQuery === 'false') paidFilter = false;
+      else if (paidQuery === 'true') paidFilter = true;
+
+      // Tìm kiếm khoản phạt theo tên user
+      const searchFilter: any = {};
       if (search) {
-        const matchingUsers = await User.find(
-          { fullName: { $regex: search, $options: "i" } },
-          { _id: 1 }
-        );
+        const matchingUsers = await User.find({ fullName: { $regex: search, $options: 'i' } }, { _id: 1 });
         const userIds = matchingUsers.map((user) => user._id);
         searchFilter.user = { $in: userIds };
       }
@@ -46,20 +37,18 @@ class FineController {
       const totalPages = Math.ceil(totalFines / pageSize);
 
       const fines = await Fine.find(searchFilter)
-        .populate([
-          { path: "borrowRecord" },
-          { path: "collectedBy", select: "fullName" }
-        ])
+        .populate([{ path: 'borrowRecord' }, { path: 'collectedBy', select: 'fullName' }])
         .skip((page - 1) * pageSize)
         .limit(pageSize)
-        .lean();
+        .lean()
+        .exec();
 
       const response = {
         data: fines,
         currentPage: page,
         pageSize,
         totalPages,
-        totalElement: totalFines,
+        totalElement: totalFines
       };
 
       res.status(200).json(response);
@@ -69,7 +58,7 @@ class FineController {
   }
 
   async payFine(
-    req: PayFineRequest,
+    req: Request<{ fineId: string }, {}, PayFineRequestBody>,
     res: Response,
     next: NextFunction
   ): Promise<void> {
@@ -83,13 +72,13 @@ class FineController {
           paymentMethod,
           collectedBy: collectorId,
           paid: true,
-          paidDate: new Date(),
+          paidDate: new Date()
         },
         { new: true }
       );
 
       if (!updatedFine) {
-        throw new AppError("Phiếu phạt không tồn tại", 404, "/fines", "PUT");
+        throw new AppError('Phiếu phạt không tồn tại', 404, '/fines', 'PUT');
       }
 
       res.status(200).json(updatedFine);

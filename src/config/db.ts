@@ -1,23 +1,20 @@
-import mongoose from "mongoose";
-
-import dotenv from "dotenv";
-import logger from "./logger";
-import userController from "../controllers/userController";
-import roleController from "../controllers/roleController";
-
-dotenv.config();
+import mongoose from 'mongoose';
+import logger from './logger';
+import userController from '../controllers/userController';
+import roleController from '../controllers/roleController';
+import { config } from './config';
 
 const connectMongo = async (): Promise<void> => {
   try {
     await mongoose.connect(
-      process.env.MONGO_URI as string,
+      config.db.uri as string,
       {
         useNewUrlParser: true,
-        useUnifiedTopology: true,
+        useUnifiedTopology: true
       } as mongoose.ConnectOptions
     );
 
-    logger.info("MongoDB connected successfully!");
+    logger.info('MongoDB connected successfully!');
 
     await roleController.initializeDefaultRoles();
     await userController.initializeAdminUser();

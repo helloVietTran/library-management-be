@@ -1,20 +1,19 @@
-import { Router } from "express";
-import { celebrate, Segments } from "celebrate";
-
-import fineController from "../controllers/fineController";
-import authMiddleware from "../middlewares/authMiddleware";
-import authorizeRole from "../middlewares/authorizeRole";
-
-import { payFineSchema } from "../validators/fineValidation";
+import { Router } from 'express';
+import { celebrate, Segments } from 'celebrate';
+import fineController from '../controllers/fineController';
+import { payFineSchema } from '../schemas/pay-fine-schema';
+import { initMiddlewares } from '../middlewares';
+import { UserRole } from '../interfaces/common-interfaces';
 
 const router = Router();
+const { auth, checkingRoles } = initMiddlewares();
 
-router.get("/", fineController.getFines);
+router.get('/', fineController.getFines);
 
 router.put(
-  "/:fineId/pay",
-  authMiddleware,
-  authorizeRole(["librarian", "admin"]),
+  '/:fineId/pay',
+  auth,
+  checkingRoles([UserRole.ADMIN, UserRole.LIBRARIAN]),
   celebrate({ [Segments.BODY]: payFineSchema }),
   fineController.payFine
 );
