@@ -1,50 +1,36 @@
-import { Router } from "express";
-import { celebrate, Segments } from "celebrate";
-
-import authorController from "../controllers/authorController";
-
-import authMiddleware from "../middlewares/authMiddleware";
-import authorizeRole from "../middlewares/authorizeRole";
-import {
-  createAuthorSchema,
-  updateAuthorSchema,
-} from "../validators/authorValidation";
-import convertFormData from "../middlewares/covertFormData";
-import upload from "../middlewares/upload";
+import { Router } from 'express';
+import { celebrate, Segments } from 'celebrate';
+import authorController from '../controllers/authorController';
+import upload from '../config/upload';
+import { initMiddlewares } from '../middlewares';
+import { UserRole } from '../interfaces/common-interfaces';
+import { createAuthorSchema } from '../schemas/create-author-schema';
+import { updateAuthorSchema } from '../schemas/update-author-schema';
 
 const router = Router();
+const { auth, checkingRoles, convertFormData } = initMiddlewares();
 
-router.get("/", authorController.getAuthors);
-
-router.get("/:authorId", authorController.getAuthorById);
-
+router.get('/', authorController.getAuthors);
 router.post(
-  "/",
-  authMiddleware,
-  authorizeRole(["librarian", "admin"]),
-  upload.single("file"),
+  '/',
+  auth,
+  checkingRoles([UserRole.ADMIN, UserRole.LIBRARIAN]),
+  upload.single('file'),
   convertFormData,
   celebrate({ [Segments.BODY]: createAuthorSchema }),
   authorController.createAuthor
 );
 
-// thêm danh sách author
-router.post(
-  "/list",
-  authMiddleware,
-  authorizeRole(["admin"]),
-  authorController.createAuthors
-);
-
+router.post('/list', auth, checkingRoles([UserRole.ADMIN]), authorController.createAuthors); // insert many authors
+router.get('/:authorId', authorController.getAuthorById);
 router.put(
-  "/:authorId",
-  authMiddleware,
-  authorizeRole(["librarian", "admin"]),
-  upload.single("file"),
+  '/:authorId',
+  auth,
+  checkingRoles([UserRole.ADMIN, UserRole.LIBRARIAN]),
+  upload.single('file'),
   convertFormData,
   celebrate({ [Segments.BODY]: updateAuthorSchema }),
   authorController.updateAuthor
 );
-
 
 export default router;

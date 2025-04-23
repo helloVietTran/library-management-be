@@ -1,0 +1,20 @@
+# Thư mục build và node_modules
+node_modules
+dist
+build
+coverage
+
+# File cụ thể
+.env
+package-lock.json
+
+# Bỏ qua toàn bộ file JS trong một thư mục
+public/**/*.js
+
+# Bỏ qua file tạm thời hoặc backup
+*.log
+*.tmp
+*.bak
+
+# Nếu bạn chỉ muốn bỏ qua một file cụ thể
+src/utils/legacyCode.js

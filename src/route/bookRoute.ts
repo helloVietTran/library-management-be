@@ -1,77 +1,45 @@
-import { Router } from "express";
-import { celebrate, Segments } from "celebrate";
-
-import bookController from "../controllers/bookController";
-
-import authMiddleware from "../middlewares/authMiddleware";
-import authorizeRole from "../middlewares/authorizeRole";
-import {
-  createBookSchema,
-  updateBookSchema,
-} from "../validators/bookValidation";
-import convertFormData from "../middlewares/covertFormData";
-import upload from "../middlewares/upload";
+import { Router } from 'express';
+import { celebrate, Segments } from 'celebrate';
+import bookController from '../controllers/bookController';
+import { updateBookSchema } from '../schemas/updat-book-schema';
+import upload from '../config/upload';
+import { UserRole } from '../interfaces/common-interfaces';
+import { initMiddlewares } from '../middlewares';
+import { createBookSchema } from '../schemas/create-book-schema';
 
 const router = Router();
+const { auth, checkingRoles, convertFormData } = initMiddlewares();
 
-router.get("/", bookController.getBooks);
+router.get('/', bookController.getBooks);
 router.post(
-  "/",
-  authMiddleware,
-  authorizeRole(["librarian", "admin"]),
-  upload.single("file"),
+  '/',
+  auth,
+  checkingRoles([UserRole.ADMIN, UserRole.LIBRARIAN]),
+  upload.single('file'),
   convertFormData,
   celebrate({ [Segments.BODY]: createBookSchema }),
   bookController.createBook
 );
-
-// xóa nhiều
-router.delete(
-  "/",
-  authMiddleware,
-  authorizeRole(["librarian", "admin"]),
-  bookController.deleteBook
-);
+router.delete('/', auth, checkingRoles([UserRole.ADMIN, UserRole.LIBRARIAN]), bookController.deleteManyBooks); // delete many
 
 // insert many (admin only)
-router.post(
-  "/list",
-  authMiddleware,
-  authorizeRole(["admin"]),
-  bookController.createBooks
-);
+router.post('/list', auth, checkingRoles([UserRole.ADMIN]), bookController.createBooks);
 
-router.get("/count", bookController.getBooksCount);
-
-// thống kê theo lượt mượn
-router.get("/stats", bookController.getBooksStatsByBorrowedTurnsCount);
-
-router.get("/:bookId", bookController.getBookById);
-
+router.get('/count', bookController.getBooksCount);
+router.get('/stats', bookController.getBooksStatsByBorrowedTurnsCount);
+router.get('/:bookId', bookController.getBookById);
 router.put(
-  "/:bookId",
-  authMiddleware,
-  authorizeRole(["librarian", "admin"]),
-  upload.single("file"),
+  '/:bookId',
+  auth,
+  checkingRoles([UserRole.ADMIN, UserRole.LIBRARIAN]),
+  upload.single('file'),
   convertFormData,
   celebrate({ [Segments.BODY]: updateBookSchema }),
   bookController.updateBook
 );
+router.delete('/:bookId', auth, checkingRoles([UserRole.ADMIN]), bookController.deleteBook);
 
-router.delete(
-  "/:bookId",
-  authMiddleware,
-  authorizeRole(["admin"]),
-  bookController.deleteBook
-);
-
-// thống kê sách mới
-router.get(
-  "/stats/new-books",
-  bookController.getBooksCountThisAndLastMonth
-);
-
-// lấy tất cả sách của 1 tác giả nào đó
-router.get("/authors/:authorId", bookController.getBooksByAuthor);
+router.get('/stats/new-books', bookController.getBooksCountThisAndLastMonth);
+router.get('/authors/:authorId', bookController.getBooksByAuthor);
 
 export default router;

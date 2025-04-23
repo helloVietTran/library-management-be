@@ -1,15 +1,15 @@
-import { Express } from "express";
-import dotenv from "dotenv";
+import { Express } from 'express';
+import dotenv from 'dotenv';
 
-import authRoute from "./authRoute";
-import userRoute from "./userRoute";
-import bookRoute from "./bookRoute";
-import authorRoute from "./authorRoute";
-import borrowRecordRoute from "./borrowReturnRoute";
-import fineRoute from "./fineRoute";
-import messageRoute from "./messageRoute";
-import commentRoute from "./commentRoute";
-import emailRoute from "./emailRoute";
+import authRoute from './authRoute';
+import userRoute from './userRoute';
+import bookRoute from './bookRoute';
+import authorRoute from './authorRoute';
+import borrowRecordRoute from './borrowReturnRoute';
+import fineRoute from './fineRoute';
+import messageRoute from './messageRoute';
+import commentRoute from './commentRoute';
+import emailRoute from './emailRoute';
 
 dotenv.config();
 

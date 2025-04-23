@@ -1,17 +1,19 @@
-import { Router } from "express";
-import { celebrate, Segments } from "celebrate";
+import { Router } from 'express';
+import { celebrate, Segments } from 'celebrate';
 
-import emailController from "../controllers/emailController";
-import authMiddleware from "../middlewares/authMiddleware";
-import authorizeRole from "../middlewares/authorizeRole";
-import { sendEmailSchema } from "../validators/emailValidation";
+import emailController from '../controllers/emailController';
+import authMiddleware from '../middlewares/auth';
+import { sendEmailSchema } from '../schemas/send-email-schema';
+import { initMiddlewares } from '../middlewares';
+import { UserRole } from '../interfaces/common-interfaces';
 
 const router = Router();
+const { checkingRoles } = initMiddlewares();
 
 router.post(
-  "/send-overdue-email",
+  '/send-overdue-email',
   authMiddleware,
-  authorizeRole(["librarian", "admin"]),
+  checkingRoles([UserRole.ADMIN, UserRole.LIBRARIAN]),
   celebrate({ [Segments.BODY]: sendEmailSchema }),
   emailController.sendOverdueEmail
 );

@@ -1,12 +1,11 @@
-import express from "express";
+import express from 'express';
 
-import messageController from "../controllers/messageController";
-import authMiddleware from "../middlewares/authMiddleware.js";
+import messageController from '../controllers/messageController';
 
 const router = express.Router();
 
-router.get("/conversations", messageController.getConversations);
-router.get("/:otherUserId", messageController.getMessages);
-router.post("/", messageController.sendMessage);
+router.get('/conversations', messageController.getConversations);
+router.get('/:otherUserId', messageController.getMessages);
+router.post('/', messageController.sendMessage);
 
 export default router;
