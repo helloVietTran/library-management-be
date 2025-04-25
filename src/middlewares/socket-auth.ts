@@ -1,6 +1,6 @@
 import { Socket } from 'socket.io';
 import { JwtPayload } from 'jsonwebtoken';
-import { jwtTokenService } from '../services/jwt-token';
+import { jwtTokenService } from '../services/jwt-token-service';
 import { ErrTokenInvalid } from '../config/error';
 import { Requester } from '../interfaces/common-interfaces';
 

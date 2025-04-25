@@ -1,5 +1,5 @@
 import { Handler } from 'express';
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { ObjectId, Schema, Document } from 'mongoose';
 import { Socket } from 'socket.io';
 
 export enum BookStatus {
@@ -19,7 +19,14 @@ export enum UserStatus {
   LOCKED = 'locked'
 }
 
+export enum PaymentMethod {
+  CASH = 'cash',
+  CARD = 'card',
+  BANK_TRANSFER = 'bank_transfer'
+}
+
 export interface IRole extends Document {
+  _id: ObjectId;
   name: UserRole;
   description?: string;
 }
@@ -70,8 +77,8 @@ export interface IBook extends Document {
 }
 
 export interface IBorrowRecord extends Document {
-  user: Schema.Types.ObjectId;
-  book: Schema.Types.ObjectId;
+  user: Schema.Types.ObjectId | string;
+  book: Schema.Types.ObjectId | string;
   borrowDate: Date;
   dueDate: Date;
   returnDate?: Date;
@@ -119,14 +126,12 @@ export interface IDisabledToken extends Document {
 }
 
 export interface IFine extends Document {
-  _id: Schema.Types.ObjectId;
-  user: Schema.Types.ObjectId; // người bị phạt
   amount: number;
   paid: boolean;
   paidDate?: Date;
   reason: string;
-  paymentMethod?: 'cash' | 'bank_transfer';
-  collectedBy?: Schema.Types.ObjectId; // fine collector
+  paymentMethod?: PaymentMethod;
+  collectedBy?: Schema.Types.ObjectId;
   borrowRecord: Schema.Types.ObjectId;
 }
 // --------------------------- //
@@ -136,7 +141,7 @@ export interface TokenPayload {
 }
 export interface Requester extends TokenPayload {}
 
-export interface ITokenProvider {
+export interface ITokenServiceProvider {
   generateToken(payload: TokenPayload): Promise<string>;
   generateRefreshToken(payload: TokenPayload): Promise<string>;
   verifyToken(token: string): Promise<TokenPayload | null>;
