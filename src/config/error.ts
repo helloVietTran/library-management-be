@@ -27,7 +27,7 @@ export class AppError extends Error {
   }
 
   wrap(rootCause: Error): AppError {
-    const appError = AppError.from(this, this.statusCode); // this may be ErrInvalidRequest
+    const appError = AppError.from(this, this.statusCode)
     appError.rootCause = rootCause;
     return appError;
   }
@@ -76,9 +76,9 @@ export const ErrUnauthorized = AppError.from(new Error('Unauthorized'), 401);
 export const ErrForbidden = AppError.from(new Error('Forbidden'), 403);
 export const ErrNotFound = AppError.from(new Error('Not found'), 404);
 export const ErrMethodNotAllowed = AppError.from(new Error('Method not allowed'), 405);
-export const ErrTokenInvalid = AppError.from(new Error('Token is invalid'), 401);
+export const ErrTokenInvalid = AppError.from(new Error('Token is invalid'), 401); 
 
-// error handler
+// error handler middleware
 export const responseErr = (err: Error, res: Response) => {
   const isProduction = process.env.NODE_ENV === 'production';
   !isProduction && console.error(err.stack);
@@ -108,3 +108,4 @@ export const responseErr = (err: Error, res: Response) => {
   const appErr = ErrInternalServer;
   res.status(appErr.getStatusCode()).json(appErr.toJSON(isProduction));
 };
+

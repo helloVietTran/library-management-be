@@ -1,7 +1,7 @@
 import { Server, Socket } from 'socket.io';
 
-import Message from '../../models/message.model';
-import Conversation from '../../models/conversation.model';
+import Message from '../../models/message-model';
+import Conversation from '../../models/conversation-model';
 import { initMiddlewares } from '../../middlewares';
 import { UserSocketMap } from '../../interfaces/common-interfaces';
 

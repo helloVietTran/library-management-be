@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import logger from './logger';
-import userController from '../controllers/userController';
-import roleController from '../controllers/roleController';
+import Logger from './logger';
+import { userService } from '../services/user-service';
+import { roleService } from '../services/role-service';
 import { config } from './config';
 
 const connectMongo = async (): Promise<void> => {
@@ -14,12 +14,13 @@ const connectMongo = async (): Promise<void> => {
       } as mongoose.ConnectOptions
     );
 
-    logger.info('MongoDB connected successfully!');
+    Logger.info('MongoDB connected successfully!');
 
-    await roleController.initializeDefaultRoles();
-    await userController.initializeAdminUser();
+    await roleService.initializeDefaultRoles();
+    await userService.initializeAdminUser();
+
   } catch (err) {
-    logger.error(`MongoDB connection failed: ${(err as Error).message}`);
+    Logger.error(`MongoDB connection failed: ${(err as Error).message}`);
     process.exit(1);
   }
 };

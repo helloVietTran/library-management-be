@@ -4,7 +4,7 @@ import http from 'http';
 import morgan from 'morgan';
 import { errors } from 'celebrate';
 import cors from 'cors';
-import route from './route';
+import route from './routes';
 import connectMongo from './config/db';
 import { initSocket } from './socket';
 import chatNamespace from './socket/namespaces/chatNamespace';
@@ -22,7 +22,6 @@ let io = initSocket(server);
 commentNamespace(io);
 chatNamespace(io);
 
-// Middleware logging request
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
