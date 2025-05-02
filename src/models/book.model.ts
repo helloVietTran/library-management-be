@@ -16,7 +16,9 @@ const BookSchema = new Schema<IBook>(
     quantity: { type: Number, required: true, min: 0 },
     price: { type: Number, required: true, min: 0 },
     pageCount: { type: Number, required: true, min: 1, default: 100 },
-    borrowedTurnsCount: { type: Number, default: 0 }
+    borrowedTurnsCount: { type: Number, default: 0 },
+    ratingsCount: { type: Number, default: 0 },
+    ratingPoint: { type: Number, default: 0 }
   },
   { timestamps: true, versionKey: false }
 );

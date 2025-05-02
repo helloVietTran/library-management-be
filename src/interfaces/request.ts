@@ -18,6 +18,7 @@ export interface BorrowRecordPaginationQuery extends PaginationQuery {
 export interface RegisterRequestBody {
   email: string;
   password: string;
+  confirmPassword?: string;
   fullName: string;
   dob: string;
   phoneNumber?: string;
@@ -25,7 +26,6 @@ export interface RegisterRequestBody {
     street: string;
     city: string;
   };
-  role: string;
 }
 
 export interface LoginRequestBody {
@@ -54,7 +54,7 @@ export interface CreateAuthorBody {
   nationality?: string;
 }
 
-export interface UpdateAuthorRequestBody {
+export interface UpdateAuthorBody {
   name?: string;
   biography?: string;
   dob?: string;
@@ -64,22 +64,21 @@ export interface UpdateAuthorRequestBody {
 
 // books
 
-
 export interface DeleteBooksBody {
   bookIds: string[];
 }
 
-export interface CreateBookRequestBody {
+export interface CreateBookBody {
   title: string;
   description?: string;
   publishedDate?: Date | string;
+  quantity: number;
+  price: number;
+  pageCount: number;
   authors: string[];
   genres: string[];
   language?: string;
   publisher?: string;
-  quantity: number;
-  price: number;
-  pageCount: number;
 }
 
 export interface UpdateBookBody {
@@ -104,9 +103,8 @@ export interface ReturnBookBody {
 }
 
 // comments
-export interface CreateCommentRequestBody {
+export interface CreateCommentBody {
   content: string;
-  userId: string;
   bookId: string;
   rating?: number;
 }
@@ -132,28 +130,15 @@ export interface PromoteUserBody {
 export interface UpdateUserStatusBody {
   status: UserStatus;
 }
+
+export interface CreateUserBody{
+  fullName: string;
+  email: string;
+  dob: string;
+}
+
 // email
 export interface SendMailRequestBody {
   recordId: string;
   receiver: string;
-}
-
-export interface UserParam {
-  userId: string;
-}
-
-export interface FineParam {
-  fineId: string;
-}
-
-export interface BorrowRecordParam {
-  recordId: string;
-}
-
-export interface BookParam {
-  bookId: string;
-}
-
-export interface AuthorParam {
-  authorId: string;
 }

@@ -1,31 +1,29 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { NextFunction, Response, Request } from 'express';
-import User from '../models/user-model';
-import Role from '../models/role-model';
+import User from '../models/user.model';
+import Role from '../models/role.model';
+import DisabledToken from '../models/disabled-token.model';
 import { IRole, TokenPayload } from '../interfaces/common-interfaces';
-import DisabledToken from '../models/disabled-token-model';
-import {
-  AppError,
-  ErrInternalServer,
-  ErrInvalidRequest,
-  ErrNotFound,
-  ErrTokenInvalid,
-  ErrUnauthorized
-} from '../config/error';
-import { LoginBody, RefreshTokenBody, RegisterBody } from '../interfaces/response';
+import { LoginResponseBody, RefreshTokenResponseBody, RegisterResponseBody } from '../interfaces/response';
 import {
   LoginRequestBody,
   LogoutRequestBody,
   RefreshTokenRequestBody,
   RegisterRequestBody
 } from '../interfaces/request';
+import {
+  AppError,
+  ErrInternalServer,
+  ErrInvalidRequest,
+  ErrNotFound,
+  ErrTokenInvalid,
+} from '../config/error';
 import { jwtTokenService } from '../services/jwt-token-service';
 import { config } from '../config/config';
 
 class AuthController {
-  // đăng nhập
-  async login(req: Request<{}, {}, LoginRequestBody>, res: Response<LoginBody>, next: NextFunction) {
+  async login(req: Request<{}, {}, LoginRequestBody>, res: Response<LoginResponseBody>, next: NextFunction) {
     const { email, password } = req.body;
     try {
       const existingUser = await User.findOne({ email }).populate<{ role: IRole }>('role');
@@ -59,8 +57,7 @@ class AuthController {
     }
   }
 
-  // đăng ký
-  async register(req: Request<{}, {}, RegisterRequestBody>, res: Response<RegisterBody>, next: NextFunction) {
+  async register(req: Request<{}, {}, RegisterRequestBody>, res: Response<RegisterResponseBody>, next: NextFunction) {
     const { email, password } = req.body;
 
     try {
@@ -115,10 +112,9 @@ class AuthController {
     }
   }
 
-  // tạo token mới
   async refreshToken(
     req: Request<{}, {}, RefreshTokenRequestBody>,
-    res: Response<RefreshTokenBody>,
+    res: Response<RefreshTokenResponseBody>,
     next: NextFunction
   ) {
     const { refreshToken } = req.body;
@@ -156,16 +152,9 @@ class AuthController {
     }
   }
 
-  // đăng xuất
   async logout(req: Request<{}, {}, LogoutRequestBody>, res: Response, next: NextFunction) {
     try {
       const { accessToken } = req.body;
-
-      if (!accessToken) {
-        return next(
-          ErrUnauthorized.withMessage('Không tìm thấy token').withDetail('body.accessToken', 'Token bắt buộc')
-        );
-      }
 
       const decoded = jwt.verify(accessToken, process.env.JWT_SECRET as string) as {
         id: string;
@@ -176,7 +165,7 @@ class AuthController {
       const expiresAt = new Date(decoded.exp * 1000);
 
       await DisabledToken.create({
-        accessToken,
+        token: accessToken,
         expiresAt
       });
 
@@ -185,7 +174,7 @@ class AuthController {
         message: 'Đăng xuất thành công'
       });
     } catch (err) {
-      next(AppError.from(err as Error, 500).withLog('Lỗi trong hàm logout'));
+      next(err);
     }
   }
 }

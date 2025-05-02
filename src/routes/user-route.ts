@@ -7,15 +7,24 @@ import { UserRole } from '../interfaces/common-interfaces';
 import { updateUserSchema } from '../validate-schemas/update-user-schema';
 import { updateUserStatusSchema } from '../validate-schemas/update-user-status-schema';
 import userController from '../controllers/user-controller';
+import { createUserSchema } from '../validate-schemas/create-user-schema';
 
 const router = Router();
 const { auth, checkingRoles, convertFormData } = initMiddlewares();
 
 router.get('/', userController.getUsers);
+router.post(
+  '/',
+  auth,
+  checkingRoles([UserRole.ADMIN, UserRole.LIBRARIAN]),
+  celebrate({ [Segments.BODY]: createUserSchema }),
+  userController.createUser
+);
 router.get('/my', auth, userController.getMyInfo);
 
 router.get('/:userId', userController.getUserById);
 router.delete('/:userId', auth, checkingRoles([UserRole.ADMIN, UserRole.LIBRARIAN]), userController.deleteUser);
+
 router.put(
   '/:userId',
   auth,

@@ -15,8 +15,6 @@ router.post(
   '/',
   auth,
   checkingRoles([UserRole.ADMIN, UserRole.LIBRARIAN]),
-  upload.single('file'),
-  convertFormData,
   celebrate({ [Segments.BODY]: createBookSchema }),
   bookController.createBook
 );
@@ -32,8 +30,6 @@ router.put(
   '/:bookId',
   auth,
   checkingRoles([UserRole.ADMIN, UserRole.LIBRARIAN]),
-  upload.single('file'),
-  convertFormData,
   celebrate({ [Segments.BODY]: updateBookSchema }),
   bookController.updateBook
 );

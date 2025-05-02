@@ -1,7 +1,7 @@
 import { FilterQuery } from 'mongoose';
 import { AppError, ErrNotFound } from '../config/error';
 import { IAuthor } from '../interfaces/common-interfaces';
-import Author from '../models/author-model';
+import Author from '../models/author.model';
 import { CreateAuthorBody } from '../interfaces/request';
 
 class AuthorService {

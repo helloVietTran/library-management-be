@@ -1,19 +1,12 @@
 import moment from 'moment';
 import { Request, Response, NextFunction } from 'express';
 
-import Author from '../models/author-model';
-import Book from '../models/book-model';
+import Author from '../models/author.model';
+import Book from '../models/book.model';
 import { AppError } from '../config/error';
 import { BorrowedTurnsCountStatsBody, PaginatedBody, TimeBasedStatsBody } from '../interfaces/response';
 import { IBook } from '../interfaces/common-interfaces';
-import {
-  AuthorParam,
-  BookParam,
-  CreateBookRequestBody,
-  DeleteBooksBody,
-  PaginationQuery,
-  UpdateBookBody
-} from '../interfaces/request';
+import { CreateBookBody, DeleteBooksBody, PaginationQuery, UpdateBookBody } from '../interfaces/request';
 import { paginateResponse, parsePaginationQuery, successResponse } from '../utils/utils';
 import { bookService } from '../services/book-service';
 import { authorService } from '../services/author-service';
@@ -39,7 +32,7 @@ class BookController {
     }
   }
 
-  async getBookById(req: Request<BookParam>, res: Response, next: NextFunction): Promise<void> {
+  async getBookById(req: Request<{ bookId: string }>, res: Response, next: NextFunction): Promise<void> {
     try {
       const { bookId } = req.params;
       const book = await bookService.findById(bookId);
@@ -50,7 +43,7 @@ class BookController {
     }
   }
 
-  async createBook(req: Request<{}, {}, CreateBookRequestBody>, res: Response, next: NextFunction): Promise<void> {
+  async createBook(req: Request<{}, {}, CreateBookBody>, res: Response, next: NextFunction): Promise<void> {
     try {
       const { title, authors } = req.body;
 
@@ -71,11 +64,12 @@ class BookController {
       const newBook = new Book({
         ...req.body,
         authors: authorIds,
-        coverImage: req.file?.path || ''
+        coverImage: req.file?.path || '',
+        publishedDate: req.body.publishedDate ? new Date(req.body.publishedDate) : undefined
       });
       await newBook.save();
 
-      res.status(201).json(successResponse('Tạo sách thành công', { book: newBook }));
+      res.status(201).json(successResponse('Tạo sách thành công', newBook));
     } catch (error) {
       next(error);
     }
@@ -90,7 +84,7 @@ class BookController {
       const { bookId } = req.params;
       const updatedBook = await bookService.updateBook(bookId, req.body);
 
-      res.status(200).json(successResponse('Cập nhật sách thành công', { book: updatedBook }));
+      res.status(200).json(successResponse('Cập nhật sách thành công', updatedBook));
     } catch (error) {
       next(error);
     }
@@ -118,7 +112,7 @@ class BookController {
     }
   }
 
-  async getBooksByAuthor(req: Request<AuthorParam>, res: Response, next: NextFunction): Promise<void> {
+  async getBooksByAuthor(req: Request<{ authorId: string }>, res: Response, next: NextFunction): Promise<void> {
     try {
       const { authorId } = req.params;
 
@@ -131,15 +125,10 @@ class BookController {
   }
 
   // lấy tổng số sách tháng này và tháng trước
-  async getBooksCountThisAndLastMonth(
-    req: Request,
-    res: Response<TimeBasedStatsBody>,
-    next: NextFunction
-  ): Promise<void> {
+  async getBooksCountThisAndLastMonth(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const now = moment().utc();
       const currentMonthEnd = now.clone().endOf('month').toDate();
-
       const previousMonthEnd = now.clone().subtract(1, 'months').endOf('month').toDate();
 
       const booksCurrentMonth = await Book.countDocuments({
@@ -150,10 +139,11 @@ class BookController {
         createdAt: { $lte: previousMonthEnd }
       });
 
-      res.json({
+      const result: TimeBasedStatsBody = {
         currentMonth: booksCurrentMonth,
         previousMonth: booksPreviousMonth
-      });
+      };
+      res.json(successResponse('Lấy số lượng sách tháng này và tháng trước thành công', result));
     } catch (error) {
       next(error);
     }

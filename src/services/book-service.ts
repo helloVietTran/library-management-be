@@ -1,5 +1,5 @@
 import { FilterQuery, ObjectId } from 'mongoose';
-import Book from '../models/book-model';
+import Book from '../models/book.model';
 import { IBook } from '../interfaces/common-interfaces';
 import { AppError } from '../config/error';
 import { UpdateBookBody } from '../interfaces/request';

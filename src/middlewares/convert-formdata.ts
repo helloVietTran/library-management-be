@@ -5,11 +5,11 @@ const convertField = (field: any, fieldName: string) => {
     case 'dob':
       return new Date(field);
     case 'address':
-      if (typeof field === 'string') return JSON.parse(field); // Parse string to object
+      if (typeof field === 'string') return JSON.parse(field);
     case 'awards':
     case 'authors':
     case 'genres':
-      return [field]; // Convert string to array
+      return Array.isArray(field) ? field : [field]; // chỉ ép thành mảng nếu chưa là mảng
     default:
       return field;
   }

@@ -32,5 +32,6 @@ router.put(
 
 router.get('/stats/monthly', borrowRecordController.getMonthlyBorrowedBooksCounts);
 router.get('/stats/new-records', borrowRecordController.getBorrowRecordsCountThisAndLastMonth);
+router.get('/users/:userId/count', borrowRecordController.countBorrowedBooksByUser);
 
 export default router;

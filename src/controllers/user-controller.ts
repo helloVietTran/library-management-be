@@ -1,24 +1,63 @@
 import dotenv from 'dotenv';
 import moment from 'moment';
+import bcrypt from 'bcryptjs';
 import { Request, Response, NextFunction } from 'express';
-import User from '../models/user-model';
+import User from '../models/user.model';
 import { ApiResponse, TimeBasedStatsBody } from '../interfaces/response';
 import {
+  CreateUserBody,
   PaginationQuery,
   PromoteUserBody,
   UpdateUserBody,
-  UpdateUserStatusBody,
-  UserParam
+  UpdateUserStatusBody
 } from '../interfaces/request';
 import { paginateResponse, parsePaginationQuery, successResponse } from '../utils/utils';
 import { AppError } from '../config/error';
 import { userService } from '../services/user-service';
 import { roleService } from '../services/role-service';
 import { borrowRecordService } from '../services/borrow-record-service';
+import { UserRole } from '../interfaces/common-interfaces';
 
 dotenv.config();
 
 class UserController {
+  async createUser(req: Request<{}, any, CreateUserBody>, res: Response, next: NextFunction) {
+    try {
+        const { dob, fullName, email } = req.body;
+
+        const isExists = await userService.existsByCond({ email });
+        const defaultRole = await roleService.findByName(UserRole.USER);
+
+        if (isExists) {
+            throw AppError.from(new Error('Email đã tồn tại')).withMessage('Email đã tồn tại');
+        }
+        const date = new Date(dob);
+
+        if (isNaN(date.getTime())) {
+            throw AppError.from(new Error('Ngày sinh không hợp lệ')).withMessage('Ngày sinh không hợp lệ');
+        }
+
+        const day = String(date.getDate()).padStart(2, '0');        
+        const month = String(date.getMonth() + 1).padStart(2, '0');  
+        const year = date.getFullYear();                           
+
+        const passwordRaw = `${day}${month}${year}`;                // VD: "27042025"
+        const hashedPassword = await bcrypt.hash(passwordRaw, 10);
+
+        const newUser = new User({
+            fullName,
+            email,
+            dob: date,
+            password: hashedPassword,
+            role: defaultRole._id
+        });
+
+        await newUser.save();
+        res.status(201).json(successResponse('Tạo mới người dùng thành công', newUser));
+    } catch (err) {
+        next(err);
+    }
+}
   async getMyInfo(req: Request, res: Response, next: NextFunction) {
     const userId = res.locals.requester.sub; // lấy userId từ res.locals.requester
     try {
@@ -29,7 +68,7 @@ class UserController {
     }
   }
 
-  async getUserById(req: Request<UserParam>, res: Response, next: NextFunction) {
+  async getUserById(req: Request<{ userId: string }>, res: Response, next: NextFunction) {
     const { userId } = req.params;
     try {
       const user = await userService.getById(userId);
@@ -47,6 +86,7 @@ class UserController {
     try {
       const { userId } = req.params;
       const updatedUser = await userService.updateUser(userId, req.body, req.file?.path);
+      
       res.status(200).json(successResponse('Cập nhật người dùng thành công', updatedUser));
     } catch (error) {
       next(error);
@@ -139,13 +179,11 @@ class UserController {
       const usersPreviousMonth = await User.countDocuments({
         createdAt: { $lte: previousMonthEnd }
       });
-
-      res.json(
-        successResponse('Statistic successfully', {
-          currentMonth: usersCurrentMonth,
-          previousMonth: usersPreviousMonth
-        })
-      );
+      const result: TimeBasedStatsBody = {
+        currentMonth: usersCurrentMonth,
+        previousMonth: usersPreviousMonth
+      };
+      res.json(successResponse('Statistic successfully', result));
     } catch (error) {
       next(error);
     }
