@@ -1,26 +1,47 @@
-import { Request, Response } from 'express';
-
-import Conversation from '../models/conversation-model';
-import Message from '../models/message-model';
-//import { getRecipientSocketId, io } from "../socket/socket";
-import AppError from '../error-handlers/AppError';
+import { Request, Response, NextFunction } from 'express';
+import Conversation from '../models/conversation.model';
+import Message from '../models/message.model';
 import { getRecipientSocketId } from '../socket/namespaces/chatNamespace';
-import { getIO } from '../socket';
+import { AppError } from '../config/error';
+import SocketServer from '../socket';
+import { successResponse } from '../utils/utils';
 
 class MessageController {
-  async sendMessage(req: Request, res: Response): Promise<void> {
+  async createConversation(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { recipientId, message } = req.body;
-      let { img } = req.body;
+      const { recipientId } = req.body;
+      const senderId = res.locals.requester.sub;
 
-      const senderId = res.locals.requester.id; // lấy id người gửi từ token
-
-      // tìm conversation giữa 2 người
       let conversation = await Conversation.findOne({
         participants: { $all: [senderId, recipientId] }
       });
 
-      // không tìm thấy
+      if (conversation) {
+        res.status(200).json(successResponse('Cuộc trò chuyện đã tồn tại', conversation));
+      }
+
+      conversation = new Conversation({
+        participants: [senderId, recipientId],
+        lastMessage: null
+      });
+
+      await conversation.save();
+
+      res.status(201).json(successResponse('Tạo cuộc trò chuyện thành công', conversation));
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async sendMessage(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { recipientId, message } = req.body;
+      const senderId = res.locals.requester.sub;
+
+      let conversation = await Conversation.findOne({
+        participants: { $all: [senderId, recipientId] }
+      });
+      // create new conversation
       if (!conversation) {
         conversation = new Conversation({
           participants: [senderId, recipientId],
@@ -35,8 +56,7 @@ class MessageController {
       const newMessage = new Message({
         conversationId: conversation._id,
         sender: senderId,
-        text: message,
-        img: img || ''
+        text: message
       });
 
       await Promise.all([
@@ -48,52 +68,51 @@ class MessageController {
           }
         })
       ]);
-      // gửi tin real time
-      const io = getIO();
+
+      const io = SocketServer.getIO();
       const recipientSocketId = getRecipientSocketId(recipientId);
+
       if (recipientSocketId) io.of('/chat').to(recipientSocketId).emit('newMessage', newMessage);
 
-      res.status(201).json(newMessage);
+      res.status(201).json(successResponse('', newMessage));
     } catch (error: any) {
-      throw new AppError(error.message, 500, '/messages/send');
+      next(error);
     }
   }
 
-  // lấy tin nhắn
-  async getMessages(req: Request, res: Response): Promise<void> {
+  async getMessages(req: Request, res: Response, next: NextFunction): Promise<void> {
     const { otherUserId } = req.params;
-    const userId = res.locals.requester.id; // lấy id người gửi từ token
-
+    const userId = res.locals.requester.sub;
     try {
-      // tìm hội thoại
       const conversation = await Conversation.findOne({
         participants: { $all: [userId, otherUserId] }
       });
 
       if (!conversation) {
-        throw new AppError('Conversation not found', 404, '/messages');
+        throw AppError.from(new Error('Không tìm thấy hội thoại giữa 2 người'), 404).withMessage(
+          'Không tìm thấy hội thoại giữa 2 người'
+        );
       }
 
       const messages = await Message.find({
         conversationId: conversation._id
       }).sort({ createdAt: 1 });
 
-      res.status(200).json(messages);
+      res.status(200).json(successResponse('', messages));
     } catch (error: any) {
-      throw new AppError(error.message, 500, '/messages');
+      next(error);
     }
   }
 
-  // lấy cuooicj trò chuyện
-  async getConversations(req: Request, res: Response): Promise<void> {
+  async getConversations(req: Request, res: Response, next: NextFunction): Promise<void> {
     {
-      const userId = res.locals.requester.id; // lấy id người gửi từ token
+      const userId = res.locals.requester.sub;
       try {
         const conversations = await Conversation.find({
           participants: userId
         }).populate({
           path: 'participants',
-          select: 'username avatar'
+          select: 'fullName avatar'
         });
 
         // loại người tham gia cuộc hội thoại
@@ -102,9 +121,9 @@ class MessageController {
             (participant) => participant._id.toString() !== userId.toString()
           );
         });
-        res.status(200).json(conversations);
+        res.status(200).json(successResponse('', conversations));
       } catch (error: any) {
-        throw new AppError(error.message, 500, '/conversations');
+        next(error);
       }
     }
   }

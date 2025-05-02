@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import Fine from '../models/fine-model';
 
-import AppError from '../error-handlers/AppError';
-import { FinePaginationQuery, FineParam, PayFineBody } from '../interfaces/request';
+import { FinePaginationQuery, PayFineBody } from '../interfaces/request';
 import { paginateResponse, parsePaginationQuery, successResponse } from '../utils/utils';
 import fineService from '../services/fine-service';
 import { userService } from '../services/user-service';

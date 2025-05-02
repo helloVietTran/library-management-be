@@ -1,6 +1,6 @@
 import { FilterQuery } from 'mongoose';
 import { IBook, IBorrowRecord, IFine } from '../interfaces/common-interfaces';
-import Fine from '../models/fine-model';
+import Fine from '../models/fine.model';
 import { AppError } from '../config/error';
 
 class FineService {

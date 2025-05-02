@@ -74,6 +74,8 @@ export interface IBook extends Document {
   price: number;
   pageCount: number;
   borrowedTurnsCount: number;
+  ratingsCount?: number;
+  ratingPoint?: number;
 }
 
 export interface IBorrowRecord extends Document {

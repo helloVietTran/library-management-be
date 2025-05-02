@@ -58,17 +58,17 @@ export interface BorrowRecordsCountBody {
   quantity: number;
 }
 
-export interface LoginBody {
+export interface LoginResponseBody {
   user: IUser;
   accessToken: string;
   refreshToken: string;
 }
 
-export interface RefreshTokenBody {
+export interface RefreshTokenResponseBody {
   accessToken: string;
 }
 
-export interface RegisterBody {
+export interface RegisterResponseBody {
   message: string;
   user: IUser;
   accessToken: string;

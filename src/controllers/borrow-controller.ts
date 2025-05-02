@@ -1,20 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
-import User from '../models/user-model';
+import User from '../models/user.model';
 import { AppError } from '../config/error';
 import { PaginatedBody } from '../interfaces/response';
 import { IBorrowRecord } from '../interfaces/common-interfaces';
-import {
-  BorrowRecordPaginationQuery,
-  BorrowRecordParam,
-  CreateBorrowRecordBody,
-  ReturnBookBody
-} from '../interfaces/request';
+import { BorrowRecordPaginationQuery, CreateBorrowRecordBody, ReturnBookBody } from '../interfaces/request';
 import { paginateResponse, parsePaginationQuery, successResponse } from '../utils/utils';
 import { borrowRecordService } from '../services/borrow-record-service';
 import { userService } from '../services/user-service';
 import { bookService } from '../services/book-service';
 import fineService from '../services/fine-service';
 import { statsService } from '../services/stats-service';
+import { Types } from 'mongoose';
 
 class BorrowRecordController {
   async getBorrowRecords(
@@ -51,7 +47,7 @@ class BorrowRecordController {
     }
   }
 
-  async getBorrowRecordById(req: Request<BorrowRecordParam>, res: Response, next: NextFunction): Promise<void> {
+  async getBorrowRecordById(req: Request<{ recordId: string }>, res: Response, next: NextFunction): Promise<void> {
     try {
       const { recordId } = req.params;
       const record = await borrowRecordService.findByIdAndPopulate(recordId);
@@ -149,7 +145,7 @@ class BorrowRecordController {
   async getBorrowRecordsCountThisAndLastMonth(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const result = await statsService.getBorrowRecordsCountThisAndLastMonth();
-      res.status(200).json(result);
+      res.status(200).json(successResponse('Statistic successfully', result));
     } catch (error) {
       next(error);
     }
@@ -161,12 +157,30 @@ class BorrowRecordController {
 
       res.status(200).json(
         successResponse('Lấy số lượng phiếu mượn thành công', {
-          borrowedCount
+          quantity: borrowedCount
         })
       );
     } catch (error) {
       next(error);
     }
+  }
+
+  async countBorrowedBooksByUser(req: Request<{userId: string}>, res: Response, next: NextFunction) : Promise<void>{
+    try {
+      const { userId } = req.params;
+      const borrowedCount = await borrowRecordService.countByCond({
+        user: userId,
+        returnDate: { $exists: false }
+      });
+
+      res.status(200).json(
+        successResponse('successfully', {
+          quantity: borrowedCount
+        })
+      );
+    } catch (error) {
+      next(error);
+    } 
   }
 }
 export default new BorrowRecordController();

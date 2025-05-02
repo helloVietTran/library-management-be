@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
-import Author from '../models/author-model';
-
+import Author from '../models/author.model';
+import { AppError } from '../config/error';
 import { CreateAuthorBody, PaginationQuery } from '../interfaces/request';
 import { paginateResponse, parsePaginationQuery, successResponse } from '../utils/utils';
 import { authorService } from '../services/author-service';
@@ -25,7 +25,7 @@ class AuthorController {
     try {
       const { authorId } = req.params;
       const author = await authorService.getAuthorById(authorId);
-      res.status(200).json(author);
+      res.status(200).json(successResponse('Lấy thông tin tác giả thành công.', author));
     } catch (error) {
       next(error);
     }
@@ -44,7 +44,7 @@ class AuthorController {
     try {
       const authors = await Author.insertMany(req.body);
       if (config.envName !== 'development') {
-        res.status(304).json({});
+        throw AppError.from(new Error('Chỉ có thể sử dụng API này trong môi trường phát triển.'));
       }
       res.status(201).json(successResponse('Tác giả đã được tạo thành công.', authors));
     } catch (error) {

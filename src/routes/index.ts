@@ -1,6 +1,4 @@
 import { Express } from 'express';
-import dotenv from 'dotenv';
-
 import authRoute from './auth-route';
 import userRoute from './user-route';
 import bookRoute from './book-route';
@@ -10,19 +8,22 @@ import fineRoute from './fine-route';
 import messageRoute from './message-route';
 import commentRoute from './comment-route';
 import emailRoute from './email-route';
-
-dotenv.config();
+import uploadRoute from "./upload-route";
+import { config } from '../config/config';
 
 function route(app: Express) {
-  app.use(`${process.env.API_PREFIX}/auth`, authRoute);
-  app.use(`${process.env.API_PREFIX}/users`, userRoute);
-  app.use(`${process.env.API_PREFIX}/books`, bookRoute);
-  app.use(`${process.env.API_PREFIX}/authors`, authorRoute);
-  app.use(`${process.env.API_PREFIX}/borrow-return`, borrowRecordRoute);
-  app.use(`${process.env.API_PREFIX}/messages`, messageRoute);
-  app.use(`${process.env.API_PREFIX}/fines`, fineRoute);
-  app.use(`${process.env.API_PREFIX}/comments`, commentRoute);
-  app.use(`${process.env.API_PREFIX}/email`, emailRoute);
+  const urlPrefix = config.api_prefix + config.api_version;
+
+  app.use(`${urlPrefix}/auth`, authRoute);
+  app.use(`${urlPrefix}/users`, userRoute);
+  app.use(`${urlPrefix}/books`, bookRoute);
+  app.use(`${urlPrefix}/authors`, authorRoute);
+  app.use(`${urlPrefix}/borrow-return`, borrowRecordRoute);
+  app.use(`${urlPrefix}/messages`, messageRoute);
+  app.use(`${urlPrefix}/fines`, fineRoute);
+  app.use(`${urlPrefix}/comments`, commentRoute);
+  app.use(`${urlPrefix}/email`, emailRoute);
+  app.use(`${urlPrefix}/upload`, uploadRoute);
 }
 
 export default route;

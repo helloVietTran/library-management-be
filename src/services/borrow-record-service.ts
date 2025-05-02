@@ -1,7 +1,7 @@
 import { FilterQuery, QueryOptions } from 'mongoose';
 import { AppError } from '../config/error';
 import { IBorrowRecord } from '../interfaces/common-interfaces';
-import BorrowRecord from '../models/borrow-record-model';
+import BorrowRecord from '../models/borrow-record.model';
 
 class BorrowRecordService {
   async findById(recordId: string, options: QueryOptions): Promise<IBorrowRecord> {

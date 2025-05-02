@@ -1,5 +1,5 @@
 import moment from 'moment';
-import BorrowRecord from '../models/borrow-record-model';
+import BorrowRecord from '../models/borrow-record.model';
 import { MonthlyBorrowedBookCountBody, StatsBorrowedAndReturnedBooksBody, TimeBasedStatsBody } from '../interfaces/response';
 
 class StatsService {

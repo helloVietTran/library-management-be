@@ -5,10 +5,6 @@ export const createCommentSchema = Joi.object({
     'string.empty': 'Nội dung bình luận không được để trống.',
     'string.max': 'Nội dung bình luận không được vượt quá 500 ký tự.'
   }),
-  userId: Joi.string().trim().required().messages({
-    'string.empty': 'ID người dùng không được để trống.',
-    'any.required': 'ID người dùng là bắt buộc.'
-  }),
   bookId: Joi.string().trim().required().messages({
     'string.empty': 'ID sách không được để trống.',
     'any.required': 'ID sách là bắt buộc.'

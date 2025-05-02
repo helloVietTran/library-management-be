@@ -2,13 +2,13 @@ import { Router } from 'express';
 import { celebrate, Segments } from 'celebrate';
 
 import authController from '../controllers/auth-controller';
-
 import convertFormData from '../middlewares/convert-formdata';
-import upload from '../config/upload';
+
 import { loginSchema } from '../validate-schemas/login-schema';
 import { registerSchema } from '../validate-schemas/register-schema';
 import { refreshTokenSchema } from '../validate-schemas/refresh-token-schema';
 import { logoutSchema } from '../validate-schemas/logout-schema';
+import upload from '../config/upload';
 
 const router = Router();
 

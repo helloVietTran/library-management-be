@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
-import Role from '../models/role-model';
-import User from '../models/user-model';
+import Role from '../models/role.model';
+import User from '../models/user.model';
 import Logger from '../config/logger';
 import { config } from '../config/config';
 import { IUser, UserStatus } from '../interfaces/common-interfaces';

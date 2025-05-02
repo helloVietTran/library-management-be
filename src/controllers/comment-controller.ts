@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 
-import Comment from '../models/comment-model';
-import Book from '../models/book-model';
+import Comment from '../models/comment.model';
+import Book from '../models/book.model';
 import mongoose from 'mongoose';
-import { CreateCommentRequestBody } from '../interfaces/request';
+import { CreateCommentBody } from '../interfaces/request';
 import { AppError } from '../config/error';
+import { successResponse } from '../utils/utils';
 
 class CommentController {
-  // Lấy danh sách bình luận theo sách
   async getCommentsByBookId(
     req: Request<{ bookId: string }, {}, {}, { sortBy?: string }>,
     res: Response,
@@ -25,13 +25,13 @@ class CommentController {
         .sort({ createdAt: sortDirection })
         .exec();
 
-      res.status(200).json(comments);
+      res.status(200).json(successResponse('success', comments));
     } catch (error) {
       next(error);
     }
   }
 
-  async countCommentsByRating(req: Request, res: Response, next: NextFunction) {
+  async countCommentsByRating(req: Request<{ bookId: string }>, res: Response, next: NextFunction) {
     try {
       const { bookId } = req.params;
       const result = await Comment.aggregate([
@@ -79,19 +79,16 @@ class CommentController {
 
       const comments = await Comment.find({ user: userId }).populate('user', 'fullName email').sort({ createdAt: -1 });
 
-      res.status(200).json(comments);
+      res.status(200).json(successResponse('Lấy tất cả bình luận của người dùng thành công', comments));
     } catch (error) {
       next(error);
     }
   }
 
-  async createComment(
-    req: Request<{}, {}, CreateCommentRequestBody>,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
+  async createComment(req: Request<{}, {}, CreateCommentBody>, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { content, userId, bookId, rating } = req.body;
+      const userId = res.locals.requester.sub;
+      const { content, bookId, rating } = req.body;
 
       const foundBook = await Book.findById(bookId);
       if (!foundBook)
@@ -142,11 +139,7 @@ class CommentController {
       comment.likes += 1;
       await comment.save();
 
-      res.status(200).json({
-        success: true,
-        message: 'Bình luận đã được like.',
-        likes: comment.likes
-      });
+      res.status(200).json(successResponse('Like thành công!', comment));
     } catch (error) {
       next(error);
     }

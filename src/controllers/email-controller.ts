@@ -4,20 +4,20 @@ import fs from 'fs';
 import { NextFunction, Request, Response } from 'express';
 
 import transporter, { setUpMailOptions } from '../config/nodemailer';
-import BorrowRecord from '../models/borrow-record-model';
-import AppError from '../error-handlers/AppError';
+import BorrowRecord from '../models/borrow-record.model';
 import { IBorrowRecordPopulated } from '../interfaces/common-interfaces';
 import { SendMailRequestBody } from '../interfaces/request';
+import { AppError } from '../config/error';
 
 class EmailController {
   async sendOverdueEmail(req: Request<{}, {}, SendMailRequestBody>, res: Response, next: NextFunction) {
     try {
       const record = (await BorrowRecord.findById(req.body.recordId)) as IBorrowRecordPopulated;
       if (!record) {
-        throw new AppError('Bản ghi mượn không tồn tại', 400, '/email/send-overdue-email');
+        throw AppError.from(new Error('Borrow record not found')).withDetail('recordId', 'Borrow record not found');
       }
       if (!record.isOverdue()) {
-        throw new AppError('Chưa quá hạn trả', 400, '/email/send-overdue-email');
+        throw AppError.from(new Error('Borrow record is not overdue')).withMessage('Người này còn thời hạn trả sách');
       }
 
       const templatePath = path.join(
