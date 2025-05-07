@@ -38,26 +38,7 @@ Một hệ thống quản lý thư viện giúp quản lý sách, độc giả, 
 ## 🛠️ Công nghệ nổi bật
     Node.js, Express.js, TypeScript, MongoDB, Joi, Cloudinary
 ## 🎬 Demo 
-
-<table>
-  <tr>
-    <td><img src="./public/demo/login.png" width="500"/></td>
-    <td><img src="./public/demo/home.png" width="500"/></td>
-  </tr>
-  <tr>
-    <td><img src="./public/demo/modal.png" width="500"/></td>
-    <td><img src="./public/demo/author.png" width="500"/></td>
-  </tr>
-  <tr>
-    <td><img src="./public/demo/author-detail.png" width="500"/></td>
-    <td><img src="./public/demo/user-detail.png" width="500"/></td>
-  </tr>
-  <tr>
-    <td><img src="./public/demo/book.png" width="500"/></td>
-    <td><img src="./public/demo/chat app.png" width="500"/></td>
-  </tr>
-</table>
-    
+   https://github.com/helloVietTran/library-management-fe/edit/main/README.md
 ## 👤 Thông tin tài khoản test 
 📌 Admin: tài khoản: admin@gmail.com | mật khẩu: admin123
 
