@@ -27,10 +27,10 @@ export const createBookSchema = Joi.object({
     'string.base': 'Ngôn ngữ phải là một chuỗi.'
   }),
 
-  publisher: Joi.string().optional().messages({
+  publisher: Joi.string().allow('').optional().messages({
     'string.base': 'Nhà xuất bản phải là một chuỗi.'
   }),
-
+  
   quantity: Joi.number().min(0).required().messages({
     'number.base': 'Số lượng phải là một số.',
     'number.min': 'Số lượng không được nhỏ hơn 0.',

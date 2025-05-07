@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { IRole } from '../interfaces/common-interfaces';
+import { IRole } from '../interfaces/common';
 
 const RoleSchema = new Schema<IRole>(
   {

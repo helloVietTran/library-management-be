@@ -2,10 +2,9 @@ import path from 'path';
 import handlebars from 'handlebars';
 import fs from 'fs';
 import { NextFunction, Request, Response } from 'express';
-
 import transporter, { setUpMailOptions } from '../config/nodemailer';
 import BorrowRecord from '../models/borrow-record.model';
-import { IBorrowRecordPopulated } from '../interfaces/common-interfaces';
+import { IBorrowRecordPopulated } from '../interfaces/common';
 import { SendMailRequestBody } from '../interfaces/request';
 import { AppError } from '../config/error';
 

@@ -3,7 +3,7 @@ import { celebrate, Segments } from 'celebrate';
 import authorController from '../controllers/author-controller';
 import upload from '../config/upload';
 import { initMiddlewares } from '../middlewares';
-import { UserRole } from '../interfaces/common-interfaces';
+import { UserRole } from '../interfaces/common';
 import { createAuthorSchema } from '../validate-schemas/create-author-schema';
 import { updateAuthorSchema } from '../validate-schemas/update-author-schema';
 

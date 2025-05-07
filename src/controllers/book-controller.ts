@@ -5,7 +5,7 @@ import Author from '../models/author.model';
 import Book from '../models/book.model';
 import { AppError } from '../config/error';
 import { BorrowedTurnsCountStatsBody, PaginatedBody, TimeBasedStatsBody } from '../interfaces/response';
-import { IBook } from '../interfaces/common-interfaces';
+import { IBook } from '../interfaces/common';
 import { CreateBookBody, DeleteBooksBody, PaginationQuery, UpdateBookBody } from '../interfaces/request';
 import { paginateResponse, parsePaginationQuery, successResponse } from '../utils/utils';
 import { bookService } from '../services/book-service';
@@ -149,7 +149,6 @@ class BookController {
     }
   }
 
-  // đếm số lượng sách
   async getBooksCount(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const booksCount = await bookService.countByCond({});
@@ -205,7 +204,6 @@ class BookController {
     }
   }
 
-  // demo in development
   async _createBooks(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       if (config.envName !== 'development') {

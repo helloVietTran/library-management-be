@@ -12,8 +12,8 @@ const port = process.env.PORT || 3001;
 export const config = {
   envName: process.env.NODE_ENV,
   port,
-  jwtSecret: process.env.JWT_SECRET || 'i am viet anh <3',
-  refreshSecret: process.env.REFRESH_SECRET || 'viet anh <3',
+  jwtSecret: process.env.JWT_SECRET || 'vbrary website',
+  refreshSecret: process.env.REFRESH_SECRET || 'hi, i am viet',
   api_prefix: process.env.API_PREFIX || '/api',
   api_version: process.env.API_VERSION || '/v1',
   db: {
@@ -24,7 +24,6 @@ export const config = {
     password: process.env.ADMIN_PASSWORD || 'admin123',
     app_pass: process.env.APP_PASS
   },
-  fe_domain: process.env.FE_DOMAIN, 
-  be_domain: process.env.BE_DOMAIN, 
+  fe_domain: process.env.FE_DOMAIN || 'http://localhost:3000',
+  be_domain: process.env.BE_DOMAIN || 'http://localhost:3001', 
 };
-

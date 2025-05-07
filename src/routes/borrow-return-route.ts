@@ -4,7 +4,7 @@ import borrowRecordController from '../controllers/borrow-controller';
 import authMiddleware from '../middlewares/auth';
 import { returnBookSchema } from '../validate-schemas/return-book-schema';
 import { initMiddlewares } from '../middlewares';
-import { UserRole } from '../interfaces/common-interfaces';
+import { UserRole } from '../interfaces/common';
 import { createBorrowRecordSchema } from '../validate-schemas/create-borrow-record-schema';
 
 const router = Router();

@@ -23,22 +23,4 @@ export const registerSchema = Joi.object({
     'string.min': 'Mật khẩu nhập lại phải có ít nhất 6 ký tự',
     'string.max': 'Mật khẩu nhập lại không được vượt quá 30 ký tự'
   })
-  // phoneNumber: Joi.string()
-  //   .pattern(/^[0-9]{10,15}$/)
-  //   .optional()
-  //   .messages({
-  //     'string.pattern.base': 'Số điện thoại phải từ 10 đến 15 chữ số'
-  //   }),
-  // address: Joi.object({
-  //   street: Joi.string().required().messages({
-  //     'any.required': 'Địa chỉ đường là bắt buộc'
-  //   }),
-  //   city: Joi.string().required().messages({
-  //     'any.required': 'Thành phố là bắt buộc'
-  //   })
-  // })
-  //   .required()
-  //   .messages({
-  //     'any.required': 'Địa chỉ là bắt buộc'
-  //   })
 });

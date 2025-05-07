@@ -1,4 +1,4 @@
-import { IMiddlewareFactory } from '../interfaces/common-interfaces';
+import { IMiddlewareFactory } from '../interfaces/common';
 import { NextFunction, Request, Response } from 'express';
 import authMiddleware from './auth';
 import checkingRoles from './checking-roles';

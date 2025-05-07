@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { Schema, model } from 'mongoose';
-import { IAuthor } from '../interfaces/common-interfaces';
+import { IAuthor } from '../interfaces/common';
 import { formatHumanReadableDate } from '../utils/utils';
 import { config } from '../config/config';
 
@@ -23,7 +23,7 @@ AuthorSchema.set('toJSON', {
     ret.updatedAt = formatHumanReadableDate(ret.updatedAt);
 
     if (ret.dob) {
-      ret.dob = moment(ret.dob).format('YYYY-MM-DD');
+      ret.dob = moment(ret.dob).format('DD-MM-YYYY');
     }
 
     if (ret.imgSrc) {

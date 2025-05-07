@@ -2,13 +2,12 @@ import { Router } from 'express';
 import { celebrate, Segments } from 'celebrate';
 import bookController from '../controllers/book-controller';
 import { updateBookSchema } from '../validate-schemas/updat-book-schema';
-import upload from '../config/upload';
-import { UserRole } from '../interfaces/common-interfaces';
+import { UserRole } from '../interfaces/common';
 import { initMiddlewares } from '../middlewares';
 import { createBookSchema } from '../validate-schemas/create-book-schema';
 
 const router = Router();
-const { auth, checkingRoles, convertFormData } = initMiddlewares();
+const { auth, checkingRoles } = initMiddlewares();
 
 router.get('/', bookController.getBooks);
 router.post(
@@ -20,7 +19,7 @@ router.post(
 );
 router.delete('/', auth, checkingRoles([UserRole.ADMIN, UserRole.LIBRARIAN]), bookController.deleteManyBooks); // delete many
 
-// insert many (admin only)
+// insert many (dev only)
 router.post('/list', auth, checkingRoles([UserRole.ADMIN]), bookController._createBooks);
 
 router.get('/count', bookController.getBooksCount);

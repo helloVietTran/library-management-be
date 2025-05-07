@@ -5,9 +5,10 @@ import { getRecipientSocketId } from '../socket/namespaces/chatNamespace';
 import { AppError } from '../config/error';
 import SocketServer from '../socket';
 import { successResponse } from '../utils/utils';
+import { CreateConversationBody, SendMessageBody } from '../interfaces/request';
 
 class MessageController {
-  async createConversation(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async createConversation(req: Request<{}, any, CreateConversationBody>, res: Response, next: NextFunction): Promise<void> {
     try {
       const { recipientId } = req.body;
       const senderId = res.locals.requester.sub;
@@ -33,7 +34,7 @@ class MessageController {
     }
   }
 
-  async sendMessage(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async sendMessage(req: Request<{}, any, SendMessageBody>, res: Response, next: NextFunction): Promise<void> {
     try {
       const { recipientId, message } = req.body;
       const senderId = res.locals.requester.sub;

@@ -3,7 +3,7 @@ import Role from '../models/role.model';
 import User from '../models/user.model';
 import Logger from '../config/logger';
 import { config } from '../config/config';
-import { IUser, UserStatus } from '../interfaces/common-interfaces';
+import { IUser, UserStatus } from '../interfaces/common';
 import { AppError } from '../config/error';
 import { UpdateUserBody } from '../interfaces/request';
 import { FilterQuery, ObjectId } from 'mongoose';
@@ -37,7 +37,7 @@ class UserService {
     }
   }
 
-  async getById(userId: string): Promise<IUser> {
+  async getById(userId: string | ObjectId): Promise<IUser> {
     const user = await User.findById(userId);
     if (!user) throw AppError.from(new Error('User not found'), 404);
     return user;

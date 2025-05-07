@@ -1,6 +1,6 @@
 import { FilterQuery, QueryOptions } from 'mongoose';
 import { AppError } from '../config/error';
-import { IBorrowRecord } from '../interfaces/common-interfaces';
+import { IBorrowRecord } from '../interfaces/common';
 import BorrowRecord from '../models/borrow-record.model';
 
 class BorrowRecordService {

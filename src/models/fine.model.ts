@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { Schema, model } from 'mongoose';
-import { IFine } from '../interfaces/common-interfaces';
+import { IFine } from '../interfaces/common';
 
 const FineSchema = new Schema<IFine>(
   {

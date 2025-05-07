@@ -18,7 +18,6 @@ const connectMongo = async (): Promise<void> => {
 
     await roleService.initializeDefaultRoles();
     await userService.initializeAdminUser();
-
   } catch (err) {
     Logger.error(`MongoDB connection failed: ${(err as Error).message}`);
     process.exit(1);

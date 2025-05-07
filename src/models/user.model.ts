@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { Schema, model, Query } from 'mongoose';
-import { IAddress, IUser, UserStatus } from '../interfaces/common-interfaces';
+import { IAddress, IUser, UserStatus } from '../interfaces/common';
 import { formatHumanReadableDate } from '../utils/utils';
 import { config } from '../config/config';
 

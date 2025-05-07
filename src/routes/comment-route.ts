@@ -3,7 +3,7 @@ import { celebrate, Segments } from 'celebrate';
 import commentController from '../controllers/comment-controller';
 import authMiddleware from '../middlewares/auth';
 import { createCommentSchema } from '../validate-schemas/create-comment-schema';
-import { UserRole } from '../interfaces/common-interfaces';
+import { UserRole } from '../interfaces/common';
 import { initMiddlewares } from '../middlewares';
 
 const router = Router();

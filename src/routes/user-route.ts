@@ -3,7 +3,7 @@ import { celebrate, Segments } from 'celebrate';
 import { promoteUserSchema } from '../validate-schemas/promote-user-schema';
 import upload from '../config/upload';
 import { initMiddlewares } from '../middlewares';
-import { UserRole } from '../interfaces/common-interfaces';
+import { UserRole } from '../interfaces/common';
 import { updateUserSchema } from '../validate-schemas/update-user-schema';
 import { updateUserStatusSchema } from '../validate-schemas/update-user-status-schema';
 import userController from '../controllers/user-controller';

@@ -4,7 +4,7 @@ import { NextFunction, Response, Request } from 'express';
 import User from '../models/user.model';
 import Role from '../models/role.model';
 import DisabledToken from '../models/disabled-token.model';
-import { IRole, TokenPayload } from '../interfaces/common-interfaces';
+import { IRole, TokenPayload } from '../interfaces/common';
 import { LoginResponseBody, RefreshTokenResponseBody, RegisterResponseBody } from '../interfaces/response';
 import {
   LoginRequestBody,
@@ -12,13 +12,7 @@ import {
   RefreshTokenRequestBody,
   RegisterRequestBody
 } from '../interfaces/request';
-import {
-  AppError,
-  ErrInternalServer,
-  ErrInvalidRequest,
-  ErrNotFound,
-  ErrTokenInvalid,
-} from '../config/error';
+import { AppError, ErrInternalServer, ErrInvalidRequest, ErrNotFound, ErrTokenInvalid } from '../config/error';
 import { jwtTokenService } from '../services/jwt-token-service';
 import { config } from '../config/config';
 
