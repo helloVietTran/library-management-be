@@ -29,6 +29,6 @@ export const config = {
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET
   },
-  fe_domain: process.env.FE_DOMAIN || 'http://localhost:3000',
-  be_domain: process.env.BE_DOMAIN || 'http://localhost:3001', 
+  fe_domain: process.env.FE_DOMAIN || 'https://vbary-fe.vercel.app',
+  be_domain: process.env.BE_DOMAIN || 'https://vbrary-be-adji.onrender.com', 
 };
