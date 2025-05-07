@@ -24,6 +24,6 @@ export const config = {
     password: process.env.ADMIN_PASSWORD || 'admin123',
     app_pass: process.env.APP_PASS
   },
-  fe_domain: process.env.FE_DOMAIN || 'http://localhost:3000',
-  be_domain: process.env.BE_DOMAIN || 'http://localhost:3001', 
+  fe_domain: process.env.FE_DOMAIN || 'https://vbary-fe.vercel.app',
+  be_domain: process.env.BE_DOMAIN || 'https://vbrary-be-adji.onrender.com', 
 };
