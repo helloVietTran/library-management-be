@@ -2,7 +2,6 @@ import moment from 'moment';
 import { Schema, model } from 'mongoose';
 import { IAuthor } from '../interfaces/common';
 import { formatHumanReadableDate } from '../utils/utils';
-import { config } from '../config/config';
 
 const AuthorSchema = new Schema<IAuthor>(
   {
@@ -26,9 +25,6 @@ AuthorSchema.set('toJSON', {
       ret.dob = moment(ret.dob).format('DD-MM-YYYY');
     }
 
-    if (ret.imgSrc) {
-      ret.imgSrc = config.be_domain + '/' + ret.imgSrc;
-    }
     return ret;
   }
 });

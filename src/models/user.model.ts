@@ -2,7 +2,6 @@ import moment from 'moment';
 import { Schema, model, Query } from 'mongoose';
 import { IAddress, IUser, UserStatus } from '../interfaces/common';
 import { formatHumanReadableDate } from '../utils/utils';
-import { config } from '../config/config';
 
 const AddressSchema = new Schema<IAddress>({
   street: { type: String, required: true },
@@ -41,10 +40,6 @@ UserSchema.set('toJSON', {
 
     ret.createdAt = moment(ret.createdAt).format('DD/MM/YYYY');
     ret.updatedAt = formatHumanReadableDate(ret.updatedAt);
-
-    if (ret.avatar) {
-      ret.avatar = config.be_domain + '/' + ret.avatar;
-    }
 
     return ret;
   }

@@ -2,7 +2,6 @@ import moment from 'moment';
 import { Schema, model, Query } from 'mongoose';
 import { IAuthor, IBook } from '../interfaces/common';
 import { formatHumanReadableDate } from '../utils/utils';
-import { config } from '../config/config';
 
 const BookSchema = new Schema<IBook>(
   {
@@ -28,10 +27,6 @@ BookSchema.set('toJSON', {
   transform: function (doc, ret) {
     ret.createdAt = moment(ret.createdAt).format('DD-MM-YYYY');
     ret.updatedAt = formatHumanReadableDate(ret.updatedAt);
-
-    if(ret.coverImage){
-      ret.coverImage = config.be_domain + '/' + ret.coverImage;
-    }
 
     if (ret.publishedDate) {
       ret.publishedDate = moment(ret.publishedDate).format('DD-MM-YYYY');
