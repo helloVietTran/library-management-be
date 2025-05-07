@@ -16,48 +16,48 @@ import { AppError } from '../config/error';
 import { userService } from '../services/user-service';
 import { roleService } from '../services/role-service';
 import { borrowRecordService } from '../services/borrow-record-service';
-import { UserRole } from '../interfaces/common-interfaces';
+import { UserRole } from '../interfaces/common';
 
 dotenv.config();
 
 class UserController {
   async createUser(req: Request<{}, any, CreateUserBody>, res: Response, next: NextFunction) {
     try {
-        const { dob, fullName, email } = req.body;
+      const { dob, fullName, email } = req.body;
 
-        const isExists = await userService.existsByCond({ email });
-        const defaultRole = await roleService.findByName(UserRole.USER);
+      const isExists = await userService.existsByCond({ email });
+      const defaultRole = await roleService.findByName(UserRole.USER);
 
-        if (isExists) {
-            throw AppError.from(new Error('Email đã tồn tại')).withMessage('Email đã tồn tại');
-        }
-        const date = new Date(dob);
+      if (isExists) {
+        throw AppError.from(new Error('Email đã tồn tại')).withMessage('Email đã tồn tại');
+      }
+      const date = new Date(dob);
 
-        if (isNaN(date.getTime())) {
-            throw AppError.from(new Error('Ngày sinh không hợp lệ')).withMessage('Ngày sinh không hợp lệ');
-        }
+      if (isNaN(date.getTime())) {
+        throw AppError.from(new Error('Ngày sinh không hợp lệ')).withMessage('Ngày sinh không hợp lệ');
+      }
 
-        const day = String(date.getDate()).padStart(2, '0');        
-        const month = String(date.getMonth() + 1).padStart(2, '0');  
-        const year = date.getFullYear();                           
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
 
-        const passwordRaw = `${day}${month}${year}`;                // VD: "27042025"
-        const hashedPassword = await bcrypt.hash(passwordRaw, 10);
+      const passwordRaw = `${day}${month}${year}`; // VD: "27042025"
+      const hashedPassword = await bcrypt.hash(passwordRaw, 10);
 
-        const newUser = new User({
-            fullName,
-            email,
-            dob: date,
-            password: hashedPassword,
-            role: defaultRole._id
-        });
+      const newUser = new User({
+        fullName,
+        email,
+        dob: date,
+        password: hashedPassword,
+        role: defaultRole._id
+      });
 
-        await newUser.save();
-        res.status(201).json(successResponse('Tạo mới người dùng thành công', newUser));
+      await newUser.save();
+      res.status(201).json(successResponse('Tạo mới người dùng thành công', newUser));
     } catch (err) {
-        next(err);
+      next(err);
     }
-}
+  }
   async getMyInfo(req: Request, res: Response, next: NextFunction) {
     const userId = res.locals.requester.sub; // lấy userId từ res.locals.requester
     try {
@@ -86,7 +86,7 @@ class UserController {
     try {
       const { userId } = req.params;
       const updatedUser = await userService.updateUser(userId, req.body, req.file?.path);
-      
+
       res.status(200).json(successResponse('Cập nhật người dùng thành công', updatedUser));
     } catch (error) {
       next(error);
@@ -160,7 +160,8 @@ class UserController {
       next(error);
     }
   }
-  // hàm thống kê người dùng tháng này và tháng trước
+
+  // thống kê số người dùng tháng này và tháng trước
   async getUsersCountThisAndLastMonth(
     req: Request,
     res: Response<ApiResponse<TimeBasedStatsBody>>,
@@ -169,7 +170,6 @@ class UserController {
     try {
       const now = moment().utc();
       const currentMonthEnd = now.clone().endOf('month').toDate();
-
       const previousMonthEnd = now.clone().subtract(1, 'months').endOf('month').toDate();
 
       const usersCurrentMonth = await User.countDocuments({
@@ -183,7 +183,7 @@ class UserController {
         currentMonth: usersCurrentMonth,
         previousMonth: usersPreviousMonth
       };
-      res.json(successResponse('Statistic successfully', result));
+      res.json(successResponse('Thống kê thành công', result));
     } catch (error) {
       next(error);
     }

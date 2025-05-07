@@ -1,12 +1,12 @@
 import { Schema, model } from 'mongoose';
-import { IConversation } from '../interfaces/common-interfaces';
+import { IConversation } from '../interfaces/common';
 
 const conversationSchema = new Schema<IConversation>(
   {
     participants: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
     lastMessage: {
-      text: { type: String, required: true },
-      sender: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+      text: { type: String },
+      sender: { type: Schema.Types.ObjectId, ref: 'User' },
       seen: { type: Boolean, default: false }
     }
   },

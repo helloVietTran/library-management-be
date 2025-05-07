@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { Query } from 'mongoose';
 import { Schema, model } from 'mongoose';
-import { BookStatus, IBook, IBorrowRecord, IUser } from '../interfaces/common-interfaces';
+import { BookStatus, IBook, IBorrowRecord, IUser } from '../interfaces/common';
 
 const BorrowRecordSchema = new Schema<IBorrowRecord>(
   {

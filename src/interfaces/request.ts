@@ -1,4 +1,4 @@
-import { BookStatus, PaymentMethod, UserRole, UserStatus } from './common-interfaces';
+import { BookStatus, PaymentMethod, UserRole, UserStatus } from './common';
 
 export interface PaginationQuery {
   page: number;
@@ -131,7 +131,7 @@ export interface UpdateUserStatusBody {
   status: UserStatus;
 }
 
-export interface CreateUserBody{
+export interface CreateUserBody {
   fullName: string;
   email: string;
   dob: string;
@@ -141,4 +141,15 @@ export interface CreateUserBody{
 export interface SendMailRequestBody {
   recordId: string;
   receiver: string;
+}
+
+// message
+export interface SendMessageBody {
+  recipientId: string;
+  message: string;
+}
+
+
+export interface CreateConversationBody {
+  recipientId: string;
 }

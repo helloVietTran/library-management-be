@@ -1,8 +1,8 @@
 import { FilterQuery } from 'mongoose';
-import { AppError, ErrNotFound } from '../config/error';
-import { IAuthor } from '../interfaces/common-interfaces';
 import Author from '../models/author.model';
 import { CreateAuthorBody } from '../interfaces/request';
+import { AppError, ErrNotFound } from '../config/error';
+import { IAuthor } from '../interfaces/common';
 
 class AuthorService {
   async getByIds(authorIds: string[]): Promise<IAuthor[]> {
@@ -40,7 +40,7 @@ class AuthorService {
 
   async createAuthor(data: CreateAuthorBody, filePath?: string) {
     const { name, dob } = data;
-    const existingAuthor = await Author.findOne({ name, dob });
+    const existingAuthor = await Author.findOne({ name });
 
     if (existingAuthor) {
       throw AppError.from(new Error('Author already exists'), 400).withMessage('Tác giả đã tồn tại');
@@ -91,7 +91,7 @@ class AuthorService {
       const updatedAuthor = await existingAuthor.save();
       return updatedAuthor;
     } catch (error) {
-      throw error; 
+      throw error;
     }
   }
 
@@ -102,7 +102,7 @@ class AuthorService {
         throw ErrNotFound.withMessage('Tác giả không tồn tại.').withDetail('authorId', authorId);
       }
     } catch (error) {
-      throw error; 
+      throw error;
     }
   }
 }

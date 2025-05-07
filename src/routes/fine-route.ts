@@ -3,7 +3,7 @@ import { celebrate, Segments } from 'celebrate';
 import fineController from '../controllers/fine-controller';
 import { payFineSchema } from '../validate-schemas/pay-fine-schema';
 import { initMiddlewares } from '../middlewares';
-import { UserRole } from '../interfaces/common-interfaces';
+import { UserRole } from '../interfaces/common';
 
 const router = Router();
 const { auth, checkingRoles } = initMiddlewares();

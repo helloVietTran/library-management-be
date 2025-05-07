@@ -2,15 +2,14 @@ import { Request, Response, NextFunction } from 'express';
 import User from '../models/user.model';
 import { AppError } from '../config/error';
 import { PaginatedBody } from '../interfaces/response';
-import { IBorrowRecord } from '../interfaces/common-interfaces';
+import { IBorrowRecord } from '../interfaces/common';
 import { BorrowRecordPaginationQuery, CreateBorrowRecordBody, ReturnBookBody } from '../interfaces/request';
 import { paginateResponse, parsePaginationQuery, successResponse } from '../utils/utils';
 import { borrowRecordService } from '../services/borrow-record-service';
 import { userService } from '../services/user-service';
 import { bookService } from '../services/book-service';
-import fineService from '../services/fine-service';
+import { fineService } from '../services/fine-service';
 import { statsService } from '../services/stats-service';
-import { Types } from 'mongoose';
 
 class BorrowRecordController {
   async getBorrowRecords(
@@ -108,14 +107,16 @@ class BorrowRecordController {
         book.quantity += 1;
       }
 
+      const user = await userService.getById(record.user);
+      user.readBooksCount += 1;
+
       const returnDate = new Date();
       record.returnDate = returnDate;
       Object.assign(record, req.body);
 
       fineService.createFineIfNeeded(status, returnDate, record, book);
 
-      await book.save();
-      await record.save();
+      await Promise.all([book.save(), record.save(), user.save()]);
 
       res.status(200).json(successResponse('Trả sách thành công!', record));
     } catch (error) {
@@ -165,7 +166,7 @@ class BorrowRecordController {
     }
   }
 
-  async countBorrowedBooksByUser(req: Request<{userId: string}>, res: Response, next: NextFunction) : Promise<void>{
+  async countBorrowedBooksByUser(req: Request<{ userId: string }>, res: Response, next: NextFunction): Promise<void> {
     try {
       const { userId } = req.params;
       const borrowedCount = await borrowRecordService.countByCond({
@@ -180,7 +181,7 @@ class BorrowRecordController {
       );
     } catch (error) {
       next(error);
-    } 
+    }
   }
 }
 export default new BorrowRecordController();

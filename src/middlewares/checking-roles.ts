@@ -1,5 +1,5 @@
 import { Handler, NextFunction, Request, Response } from 'express';
-import { UserRole, Requester } from '../interfaces/common-interfaces';
+import { UserRole, Requester } from '../interfaces/common';
 
 const checkingRoles = (roles: UserRole[]): Handler => {
   return (req: Request, res: Response, next: NextFunction): any => {

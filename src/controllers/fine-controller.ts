@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 
 import { FinePaginationQuery, PayFineBody } from '../interfaces/request';
 import { paginateResponse, parsePaginationQuery, successResponse } from '../utils/utils';
-import fineService from '../services/fine-service';
+import { fineService } from '../services/fine-service';
 import { userService } from '../services/user-service';
 
 class FineController {

@@ -1,5 +1,5 @@
 import jwt, { Secret } from 'jsonwebtoken';
-import { ITokenServiceProvider, TokenPayload } from '../interfaces/common-interfaces';
+import { ITokenServiceProvider, TokenPayload } from '../interfaces/common';
 import { config } from '../config/config';
 
 type ExpiresInType = number | `${number}${'ms' | 's' | 'm' | 'h' | 'd' | 'w' | 'y'}`;

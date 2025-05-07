@@ -1,5 +1,5 @@
 import { FilterQuery } from 'mongoose';
-import { IBook, IBorrowRecord, IFine } from '../interfaces/common-interfaces';
+import { IBook, IBorrowRecord, IFine } from '../interfaces/common';
 import Fine from '../models/fine.model';
 import { AppError } from '../config/error';
 
@@ -17,17 +17,24 @@ class FineService {
       .exec();
   }
 
-  async updateFine(userId: string, updateData: any): Promise<any> {
+  async updateFine(fineId: string, updateData: any): Promise<any> {
     try {
-      const fine = await Fine.findOne({ user: userId, _id: updateData.fineId });
-
-      if (!fine) {
+      const updatedFine = await Fine.findByIdAndUpdate(
+        fineId,
+        {
+          $set: {
+            ...updateData,
+            paidDate : Date.now(),
+            paid: true
+          },
+        },
+        { new: true }
+      );
+  
+      if (!updatedFine) {
         throw AppError.from(new Error('Không tìm thấy khoản phạt tương ứng'), 404);
       }
-      Object.assign(fine, updateData);
-
-      const updatedFine = await fine.save();
-
+  
       return updatedFine;
     } catch (error) {
       throw error;
@@ -70,4 +77,4 @@ class FineService {
 
 }
 
-export default new FineService();
+export const fineService = new FineService();

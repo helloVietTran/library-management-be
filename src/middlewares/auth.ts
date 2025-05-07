@@ -5,7 +5,7 @@ import { jwtTokenService } from '../services/jwt-token-service';
 
 import DisabledToken from '../models/disabled-token.model';
 import { ErrTokenInvalid } from '../config/error';
-import { Requester } from '../interfaces/common-interfaces';
+import { Requester } from '../interfaces/common';
 
 dotenv.config();
 

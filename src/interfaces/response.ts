@@ -1,4 +1,4 @@
-import { IUser } from './common-interfaces';
+import { IUser } from './common';
 
 export interface ApiResponse<T = any> {
   success: boolean;

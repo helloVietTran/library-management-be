@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { IDisabledToken } from '../interfaces/common-interfaces';
+import { IDisabledToken } from '../interfaces/common';
 
 const DisabledTokenSchema = new Schema<IDisabledToken>(
   {

@@ -1,6 +1,6 @@
 import { FilterQuery, ObjectId } from 'mongoose';
 import Book from '../models/book.model';
-import { IBook } from '../interfaces/common-interfaces';
+import { IBook } from '../interfaces/common';
 import { AppError } from '../config/error';
 import { UpdateBookBody } from '../interfaces/request';
 
@@ -47,7 +47,7 @@ class BookService {
     });
 
     if (!updatedBook) {
-      throw AppError.from(new Error('Book not found'), 404).withMessage('Không tìm thấy người dùng');
+      throw AppError.from(new Error('Book not found'), 404).withMessage('Không tìm thấy sách');
     }
 
     return updatedBook;

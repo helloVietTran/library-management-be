@@ -1,5 +1,5 @@
 import Role from '../models/role.model';
-import { IRole, UserRole } from '../interfaces/common-interfaces';
+import { IRole, UserRole } from '../interfaces/common';
 import Logger from '../config/logger';
 import { AppError } from '../config/error';
 
