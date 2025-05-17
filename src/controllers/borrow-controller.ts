@@ -2,13 +2,12 @@ import { Request, Response, NextFunction } from 'express';
 import User from '../models/user.model';
 import { AppError } from '../config/error';
 import { PaginatedBody } from '../interfaces/response';
-import { IBorrowRecord, IFine } from '../interfaces/common';
+import { IBorrowRecord, IFine, UserStatus } from '../interfaces/common';
 import { BorrowRecordPaginationQuery, CreateBorrowRecordBody, ReturnBookBody } from '../interfaces/request';
 import { paginateResponse, parsePaginationQuery, successResponse } from '../utils/utils';
 import { borrowRecordService } from '../services/borrow-record-service';
 import { userService } from '../services/user-service';
 import { bookService } from '../services/book-service';
-import { fineService } from '../services/fine-service';
 import { statsService } from '../services/stats-service';
 import Fine from '../models/fine.model';
 
@@ -66,9 +65,13 @@ class BorrowRecordController {
     try {
       const { userId, bookId, dueDate } = req.body;
 
-      const foundUser = await userService.existsByCond({ _id: userId });
+      const foundUser = await userService.getById(userId);
       if (!foundUser) {
         throw AppError.from(new Error('Người dùng không tồn tại'), 404);
+      }
+
+        if (foundUser.status != UserStatus.ACTIVE) {
+        throw AppError.from(new Error('Tài khoản này đã bị khóa'), 404);
       }
 
       const foundBook = await bookService.findById(bookId);
