@@ -27,13 +27,12 @@ Một hệ thống quản lý thư viện giúp quản lý sách, độc giả, 
 - Quản lý sách (thêm, sửa, xoá, tìm kiếm)
 - Quản lý người dùng (đăng ký, cập nhật thông tin, xoá)
 - Quản lý mượn/trả sách
-- Hỗ trợ người dùng gửi email khi người dùng quá hạn trả sách
+- Hỗ trợ gửi email khi người dùng quá hạn trả sách
 - Phân quyền theo vai trò
 - Giao diện người dùng trực quan, responsive
 - Cung cấp một số thống kê dưới dạng số liệu, bảng biểu về tình hình thư viện: biến động mượn trả, thống kê sách theo lượt mượn
 - Cung cấp 1 Chat App đơn giản
 - Xác thực bằng JWT, refresh token
-- Hỗ trợ xuất file pdf hoặc xlsx
 
 ## 🛠️ Công nghệ nổi bật
     Node.js, Express.js, TypeScript, MongoDB, Joi, Cloudinary
