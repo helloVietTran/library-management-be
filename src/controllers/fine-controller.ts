@@ -4,6 +4,8 @@ import { FinePaginationQuery, PayFineBody } from '../interfaces/request';
 import { paginateResponse, parsePaginationQuery, successResponse } from '../utils/utils';
 import { fineService } from '../services/fine-service';
 import { userService } from '../services/user-service';
+import Fine from '../models/fine.model';
+import { AppError } from '../config/error';
 
 class FineController {
   async getFines(req: Request<any, any, any, FinePaginationQuery>, res: Response, next: NextFunction): Promise<void> {
@@ -39,8 +41,24 @@ class FineController {
   async payFine(req: Request<{ fineId: string }, {}, PayFineBody>, res: Response, next: NextFunction): Promise<void> {
     try {
       const { fineId } = req.params;
+      const collectorId = res.locals.requester.sub;
 
-      const updatedFine = await fineService.updateFine(fineId, req.body);
+      const updatedFine = await Fine.findByIdAndUpdate(
+        fineId,
+        {
+          $set: {
+            ...req.body,
+            paidDate: Date.now(),
+            paid: true,
+            collectedBy: collectorId
+          }
+        },
+        { new: true }
+      );
+
+      if (!updatedFine) {
+        throw AppError.from(new Error('Không tìm thấy khoản phạt tương ứng'), 404);
+      }
 
       res.status(200).json(successResponse('Thanh toán thành công rồi!', updatedFine));
     } catch (err) {
