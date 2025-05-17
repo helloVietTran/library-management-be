@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import User from '../models/user.model';
 import { AppError } from '../config/error';
 import { PaginatedBody } from '../interfaces/response';
-import { IBorrowRecord } from '../interfaces/common';
+import { IBorrowRecord, IFine } from '../interfaces/common';
 import { BorrowRecordPaginationQuery, CreateBorrowRecordBody, ReturnBookBody } from '../interfaces/request';
 import { paginateResponse, parsePaginationQuery, successResponse } from '../utils/utils';
 import { borrowRecordService } from '../services/borrow-record-service';
@@ -10,6 +10,7 @@ import { userService } from '../services/user-service';
 import { bookService } from '../services/book-service';
 import { fineService } from '../services/fine-service';
 import { statsService } from '../services/stats-service';
+import Fine from '../models/fine.model';
 
 class BorrowRecordController {
   async getBorrowRecords(
@@ -102,19 +103,46 @@ class BorrowRecordController {
         skipPopulate: true
       });
 
+      // cập nhật số lượng sách
       const book = await bookService.findById(record.book);
       if (status === 'ok') {
         book.quantity += 1;
       }
 
+      // tăng số sách người dùng đã đọc
       const user = await userService.getById(record.user);
       user.readBooksCount += 1;
 
       const returnDate = new Date();
       record.returnDate = returnDate;
+
       Object.assign(record, req.body);
 
-      fineService.createFineIfNeeded(status, returnDate, record, book);
+      let fine: IFine | null = null;
+      // sách bị hư hại
+      if (status !== 'ok') {
+        fine = new Fine({
+          amount: book.price,
+          paid: false,
+          reason: 'Sách bị mất hoặc hư hỏng',
+          borrowRecord: record._id
+        });
+      }
+      // sách không bị hư hại nhưng trả muộn
+      if (status === 'ok' && returnDate.getTime() > record.dueDate.getTime()) {
+        const overdueDays = Math.ceil((returnDate.getTime() - record.dueDate.getTime()) / (1000 * 60 * 60 * 24));
+        const fineAmount = overdueDays * 1000;
+
+        fine = new Fine({
+          amount: fineAmount,
+          paid: false,
+          reason: `Trả sách muộn ${overdueDays} ngày`,
+          borrowRecord: record._id
+        });
+      }
+
+      if(fine)
+          await fine.save();
 
       await Promise.all([book.save(), record.save(), user.save()]);
 

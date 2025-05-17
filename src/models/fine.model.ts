@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { Schema, model } from 'mongoose';
+import { Query, Schema, model } from 'mongoose';
 import { IFine } from '../interfaces/common';
 
 const FineSchema = new Schema<IFine>(
@@ -18,6 +18,11 @@ const FineSchema = new Schema<IFine>(
   },
   { timestamps: true }
 );
+
+FineSchema.pre<Query<any, IFine>>(/^find/, function (next) {
+  this.populate('borrowRecord').populate('collectedBy');
+  next();
+});
 
 FineSchema.set('toJSON', {
   transform: function (doc, ret) {
