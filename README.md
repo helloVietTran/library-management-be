@@ -23,21 +23,20 @@
 Một hệ thống quản lý thư viện giúp quản lý sách, độc giả, mượn trả sách. 
 
 ## 🚀 Tính năng chính
-
+- Hỗ trợ gửi email khi người dùng quá hạn trả sách
 - Quản lý sách (thêm, sửa, xoá, tìm kiếm)
 - Quản lý người dùng (đăng ký, cập nhật thông tin, xoá)
 - Quản lý mượn/trả sách
-- Hỗ trợ gửi email khi người dùng quá hạn trả sách
 - Phân quyền theo vai trò
 - Giao diện người dùng trực quan, responsive
 - Cung cấp một số thống kê dưới dạng số liệu, bảng biểu về tình hình thư viện: biến động mượn trả, thống kê sách theo lượt mượn
 - Cung cấp 1 Chat App đơn giản
 - Xác thực bằng JWT, refresh token
+- Tải file .pdf, .xlsx chứa thông tin sách và tác giả
 
 ## 🛠️ Công nghệ nổi bật
     Node.js, Express.js, TypeScript, MongoDB, Joi, Cloudinary
-## 🎬 Demo 
-   https://github.com/helloVietTran/library-management-fe/edit/main/README.md
+    
 ## 👤 Thông tin tài khoản test 
 📌 Admin: tài khoản: admin@gmail.com | mật khẩu: admin123
 
