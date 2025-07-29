@@ -1,4 +1,31 @@
-## 📌Hướng Dẫn Cài Đặt và Chạy Dự Án
+### 📚 Về dự án - Library management website - Vbrary
+
+Một hệ thống quản lý thư viện giúp quản lý sách, độc giả, mượn trả sách. 
+
+### Tính năng chính
+- Hỗ trợ gửi email khi người dùng quá hạn trả sách
+- Quản lý sách (thêm, sửa, xoá, tìm kiếm)
+- Quản lý người dùng (đăng ký, cập nhật thông tin, xoá)
+- Quản lý mượn/trả sách
+- Phân quyền theo loại người dùng (với 3 loại người dùng)
+- Cung cấp một số thống kê dưới dạng số liệu và bảng biểu về tình hình thư viện: biến động mượn trả, thống kê sách theo lượt mượn
+- Cung cấp 1 Chat App đơn giản
+- Xác thực bằng JWT, refresh token
+- Tải file .pdf, .xlsx chứa thông tin sách và tác giả
+
+### Công việc thực hiện
+- Phân tích bài toán quản lý thư viện
+- Thiết kế và xây dựng API RESTful
+- Xây dựng cơ sở dữ liệu MongoDB và xác định mối quan hệ tham chiếu giữa các collection
+- Tích hợp dịch vụ bên ngoài: Email Service
+- Viết unit test bằng Jest cho dự án
+- Viết các truy vấn thống kê, và tối ưu truy vấn MongoDB bằng cách sử dụng lean
+- Triển khai xác thực và phân quyền người dùng bằng JWT
+
+### 🛠️ Công nghệ nổi bật
+    Node.js, Express.js, TypeScript, MongoDB, Joi, Cloudinary
+    
+### 📌Hướng Dẫn Cài Đặt và Chạy Dự Án
 
 Để clone dự án từ GitHub về máy tính của bạn, làm theo các bước sau:
 
@@ -16,38 +43,10 @@
      ```bash
      npm run dev
      ```
-### 🎉 Chúc mừng! Bạn đã chạy dự án thành công 
-
-# 📚 Về dự án - Library management website - Vbrary
-
-Một hệ thống quản lý thư viện giúp quản lý sách, độc giả, mượn trả sách. 
-
-## 🚀 Tính năng chính
-- Hỗ trợ gửi email khi người dùng quá hạn trả sách
-- Quản lý sách (thêm, sửa, xoá, tìm kiếm)
-- Quản lý người dùng (đăng ký, cập nhật thông tin, xoá)
-- Quản lý mượn/trả sách
-- Phân quyền theo vai trò
-- Giao diện người dùng trực quan, responsive
-- Cung cấp một số thống kê dưới dạng số liệu, bảng biểu về tình hình thư viện: biến động mượn trả, thống kê sách theo lượt mượn
-- Cung cấp 1 Chat App đơn giản
-- Xác thực bằng JWT, refresh token
-- Tải file .pdf, .xlsx chứa thông tin sách và tác giả
-
-## 🛠️ Công nghệ nổi bật
-    Node.js, Express.js, TypeScript, MongoDB, Joi, Cloudinary
     
-## 👤 Thông tin tài khoản test 
+### 👤 Thông tin tài khoản test 
 📌 Admin: tài khoản: admin@gmail.com | mật khẩu: admin123
 
-## 📌 Hướng phát triển tương lai
-- Cung cấp tìm kiếm sách trên nhiều tiêu chí
-- Đề xuất các sách liên quan
-- Cung cấp tính năng thống kê trên nhiều tiêu chí
-- Phát triển thêm giao diện mượn sách
-
-## 📄 License
-- Hoàn toàn miễn phí
 
 
 
