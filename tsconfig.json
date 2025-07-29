@@ -4,12 +4,13 @@
     "module": "CommonJS",
     "moduleResolution": "node",
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": ".", // thư mục gốc của dự án
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["node", "jest"]
   },
-  "include": ["src"],
+  "include": ["src", "tests", "**/*.test.ts"],
   "exclude": ["node_modules", "dist"]
 }
