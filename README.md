@@ -1,6 +1,6 @@
 ### 📚 Về dự án - Library management website - Vbrary
 
-Một hệ thống quản lý thư viện giúp quản lý sách, độc giả, mượn trả sách. 
+Một hệ thống quản lý thư viện giúp quản lý sách, độc giả, mượn trả sách giải quyết vấn đề bất cập khi quản lý thủ công thư viện
 
 ### Tính năng chính
 - Hỗ trợ gửi email khi người dùng quá hạn trả sách
