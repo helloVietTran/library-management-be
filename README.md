@@ -20,13 +20,13 @@ Một hệ thống quản lý thư viện giúp quản lý sách, độc giả, 
 - Xây dựng schema để validate request bằng Joi
 - Xây dựng middleware để xác thực, phân quyền và upload file ảnh
 - Tích hợp dịch vụ bên ngoài: Email Service
-- Viết unit test bằng Jest cho dự án
+- Viết một số unit test bằng Jest cho dự án
 - Viết các truy vấn thống kê, và tối ưu truy vấn MongoDB bằng cách sử dụng lean
 - Triển khai xác thực và phân quyền người dùng bằng JWT cho 3 loại người dùng
 - Quản lý interface typescript tập trung
 
 ### 🛠️ Công nghệ nổi bật
-    Node.js, Express.js, TypeScript, MongoDB, Joi, Cloudinary
+    Node.js, Express.js, TypeScript, MongoDB, Joi, Cloudinary, Jest
     
 ### 📌Hướng Dẫn Cài Đặt và Chạy Dự Án
 
