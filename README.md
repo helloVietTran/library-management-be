@@ -13,7 +13,7 @@ Một hệ thống quản lý thư viện giúp quản lý sách, độc giả, 
 - Xác thực bằng JWT, refresh token
 - Tải file .pdf, .xlsx chứa thông tin sách và tác giả
 
-### Công việc thực hiện
+### Công việc thực hiện ở backend
 - Phân tích bài toán quản lý thư viện
 - Thiết kế và xây dựng API RESTful
 - Xây dựng cơ sở dữ liệu MongoDB và xác định mối quan hệ tham chiếu giữa các collection
